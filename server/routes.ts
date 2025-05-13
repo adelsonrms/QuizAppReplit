@@ -1,11 +1,16 @@
-import type { Express } from "express";
+import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { 
   insertQuizSchema, insertStudentSchema, insertInstructorSchema,
-  insertStudentQuizSchema, insertStudentResponseSchema
+  insertStudentQuizSchema, insertStudentResponseSchema,
+  insertQuestionSchema, insertAlternativeSchema
 } from "@shared/schema";
 import { z } from "zod";
+import multer from "multer";
+import csvParser from "csv-parser";
+import fs from "fs";
+import path from "path";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Create a HTTP server
