@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 98%;
+  --foreground: 20 14.3% 4.1%;
+  --muted: 60 4.8% 95.9%;
+  --muted-foreground: 25 5.3% 44.7%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 20 14.3% 4.1%;
+  --card: 0 0% 100%;
+  --card-foreground: 20 14.3% 4.1%;
+  --border: 20 5.9% 90%;
+  --input: 20 5.9% 90%;
+  --primary: 277 47% 29%; /* roxo escuro (dark purple) */
+  --primary-foreground: 60 9.1% 97.8%;
+  --secondary: 44 43% 92%; /* bege claro (light beige) */
+  --secondary-foreground: 24 9.8% 10%;
+  --accent: 35 66% 45%; /* dourado bronze (bronze gold) */
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 60 9.1% 97.8%;
+  --ring: 277 47% 29%;
+  --radius: 0.5rem;
+  
+  /* Color variations */
+  --primary-light: 277 47% 35%;
+  --accent-light: 35 66% 55%;
+  --neutral: 0 0% 88%; /* cinza claro (light gray) */
+  --text-dark: 0 0% 20%;
+  --success: 120 39% 45%;
+  --error: 0 72% 51%;
+  
+  /* Chart colors */
+  --chart-1: 277 47% 29%;
+  --chart-2: 35 66% 45%;
+  --chart-3: 196 80% 53%;
+  --chart-4: 150 60% 48%;
+  --chart-5: 322 65% 55%;
+}
+
+.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --primary: 277 47% 40%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 44 43% 30%;
+  --secondary-foreground: 0 0% 98%;
+  --accent: 35 66% 55%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --ring: 277 47% 40%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-poppins font-semibold;
+  }
+}
+
+@layer components {
+  .quiz-option {
+    @apply flex items-start p-3 border border-neutral rounded-md cursor-pointer transition-colors;
+  }
+  
+  .quiz-option:hover {
+    @apply border-accent;
+  }
+  
+  .quiz-option.selected {
+    @apply border-primary bg-primary/5;
+  }
+  
+  .tab-btn {
+    @apply px-6 py-4 font-medium text-gray-700 border-b-2 border-transparent;
+  }
+  
+  .tab-btn.active {
+    @apply text-primary border-primary;
+  }
+}
+
+/* Fonts are loaded via Google Fonts in App.tsx */
