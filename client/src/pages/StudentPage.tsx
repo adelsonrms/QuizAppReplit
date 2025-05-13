@@ -61,19 +61,19 @@ const StudentPage: React.FC = () => {
   });
   
   const createStudentMutation = useMutation({
-    mutationFn: (data: { name: string; turma: string }) => 
+    mutationFn: (data: { name: string }) => 
       apiRequest('POST', '/api/students', data)
         .then(res => res.json()),
     onSuccess: (data) => {
       toast({
-        title: 'Bem-vindo',
-        description: `Olá, ${data.name}! Vamos começar o simulado.`,
+        title: 'Welcome',
+        description: `Hello, ${data.name}! Let's start the quiz.`,
       });
       startQuiz(data.id);
     },
     onError: (error) => {
       toast({
-        title: 'Erro',
+        title: 'Error',
         description: String(error),
         variant: 'destructive',
       });
@@ -162,25 +162,15 @@ const StudentPage: React.FC = () => {
   const handleStudentInfoSubmit = () => {
     if (!studentName.trim()) {
       toast({
-        title: 'Nome requerido',
-        description: 'Por favor, insira seu nome para continuar.',
-        variant: 'destructive',
-      });
-      return;
-    }
-    
-    if (!studentTurma.trim()) {
-      toast({
-        title: 'Turma requerida',
-        description: 'Por favor, insira sua turma para continuar.',
+        title: 'Name required',
+        description: 'Please enter your name to continue.',
         variant: 'destructive',
       });
       return;
     }
     
     createStudentMutation.mutate({
-      name: studentName,
-      turma: studentTurma
+      name: studentName
     });
   };
   
@@ -402,30 +392,21 @@ const StudentPage: React.FC = () => {
       <Dialog open={studentInfoDialogOpen && !!quizId} onOpenChange={setStudentInfoDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Identificação do Aluno</DialogTitle>
+            <DialogTitle>Student Identification</DialogTitle>
             <DialogDescription>
-              Por favor, informe seus dados para iniciar o simulado.
+              Please enter your information to start the quiz.
             </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Nome Completo</Label>
+              <Label htmlFor="name">Full Name</Label>
               <Input 
                 id="name" 
                 value={studentName}
                 onChange={(e) => setStudentName(e.target.value)}
-                placeholder="Digite seu nome completo"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="turma">Turma</Label>
-              <Input 
-                id="turma" 
-                value={studentTurma}
-                onChange={(e) => setStudentTurma(e.target.value)}
-                placeholder="Digite sua turma"
+                placeholder="Enter your full name"
+                autoFocus
               />
             </div>
           </div>
@@ -438,8 +419,8 @@ const StudentPage: React.FC = () => {
               disabled={createStudentMutation.isPending || startQuizMutation.isPending}
             >
               {(createStudentMutation.isPending || startQuizMutation.isPending) 
-                ? 'Processando...' 
-                : 'Iniciar Simulado'
+                ? 'Processing...' 
+                : 'Start Quiz'
               }
             </Button>
           </DialogFooter>

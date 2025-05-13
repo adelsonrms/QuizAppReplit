@@ -1,4 +1,6 @@
 import React from 'react';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 
 interface Alternative {
   id: number;
@@ -30,54 +32,39 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   onSelectAlternative,
   showCorrectAnswers = false
 }) => {
+  // Sort alternatives by letter alphabetically (A, B, C, D...)
+  const sortedAlternatives = [...question.alternatives].sort((a, b) => 
+    a.letter.localeCompare(b.letter)
+  );
+
   return (
-    <div className="mb-8">
-      <div className="flex justify-between items-center mb-3">
-        <h3 className="font-poppins font-medium text-lg text-primary">Questão {currentQuestionNumber}</h3>
-        <span className="text-sm text-text-dark bg-secondary px-3 py-1 rounded-full">{question.category}</span>
+    <div className="w-full">
+      <div className="pb-2 bg-gray-100 rounded-t-md mb-6">
+        <h2 className="text-right text-sm text-gray-600 p-3">
+          QUESTION {currentQuestionNumber} - {question.category.toUpperCase()}
+        </h2>
       </div>
       
-      {question.imagePath && (
-        <div className="mb-4 rounded-lg overflow-hidden">
-          <img 
-            src={question.imagePath} 
-            alt={`Imagem da questão ${currentQuestionNumber}`} 
-            className="w-full h-auto object-cover"
-          />
-        </div>
-      )}
-      
       <div className="mb-6">
-        <p className="text-text-dark mb-4">{question.enunciado}</p>
+        <h3 className="font-medium text-lg text-gray-800 mb-6">{question.enunciado}</h3>
         
-        <div className="space-y-3 mt-4">
-          {question.alternatives.map((alternative) => (
-            <label 
-              key={alternative.id}
-              className={`quiz-option ${selectedAlternativeId === alternative.id ? 'selected' : ''} ${
-                showCorrectAnswers && alternative.correct ? 'border-success bg-success/10' : ''
-              }`}
-              onClick={() => onSelectAlternative(alternative.id)}
-            >
-              <input 
-                type="radio" 
-                name={`question${question.id}`}
-                className="mt-1 mr-3"
-                checked={selectedAlternativeId === alternative.id}
-                onChange={() => {}}
-              />
-              <span>
-                <span className="font-medium text-text-dark">{alternative.letter}.</span>{' '}
-                {alternative.texto}
-              </span>
-              {showCorrectAnswers && alternative.correct && (
-                <span className="ml-auto text-success">
-                  <i className="ri-check-line"></i>
-                </span>
-              )}
-            </label>
+        <RadioGroup 
+          value={selectedAlternativeId?.toString() || ""}
+          onValueChange={(value) => onSelectAlternative(parseInt(value))}
+          className="space-y-3"
+        >
+          {sortedAlternatives.map((alternative) => (
+            <div key={alternative.id} className="flex items-start space-x-2 p-3 rounded-md bg-gray-50">
+              <RadioGroupItem value={alternative.id.toString()} id={`option-${alternative.id}`} />
+              <Label 
+                htmlFor={`option-${alternative.id}`} 
+                className="flex-1 text-base font-normal text-gray-700"
+              >
+                <span className="font-medium mr-2">{alternative.letter}.</span> {alternative.texto}
+              </Label>
+            </div>
           ))}
-        </div>
+        </RadioGroup>
       </div>
     </div>
   );
