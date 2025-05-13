@@ -39,10 +39,26 @@ const QuizForm: React.FC<QuizFormProps> = ({ instructorId }) => {
   });
   
   const createQuizMutation = useMutation({
-    mutationFn: (data: QuizFormValues) => 
-      apiRequest('POST', '/api/quizzes', data)
-        .then(res => res.json()),
-    onSuccess: () => {
+    mutationFn: async (data: QuizFormValues) => {
+      console.log('Submitting quiz data:', data);
+      try {
+        const response = await apiRequest('POST', '/api/quizzes', data);
+        console.log('Quiz creation response status:', response.status);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Quiz creation failed:', errorText);
+          throw new Error(`Server error: ${response.status} - ${errorText}`);
+        }
+        
+        return response.json();
+      } catch (error) {
+        console.error('Quiz creation exception:', error);
+        throw error;
+      }
+    },
+    onSuccess: (data) => {
+      console.log('Quiz created successfully:', data);
       toast({
         title: 'Quiz created',
         description: 'The quiz was successfully created!',
@@ -51,6 +67,7 @@ const QuizForm: React.FC<QuizFormProps> = ({ instructorId }) => {
       queryClient.invalidateQueries({ queryKey: [`/api/instructor/${instructorId}/quizzes`] });
     },
     onError: (error) => {
+      console.error('Quiz creation error:', error);
       toast({
         title: 'Error creating quiz',
         description: String(error),

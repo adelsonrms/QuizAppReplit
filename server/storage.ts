@@ -436,14 +436,39 @@ export class MemStorage implements IStorage {
   async getQuizQuestions(quizId: number): Promise<QuizQuestion[]> {
     return Array.from(this.quizQuestions.values())
       .filter((quizQuestion) => quizQuestion.quizId === quizId)
-      .sort((a, b) => a.order - b.order);
+      .sort((a, b) => (a.order || 0) - (b.order || 0));
   }
   
   async createQuizQuestion(insertQuizQuestion: InsertQuizQuestion): Promise<QuizQuestion> {
-    const id = this.quizQuestionId++;
-    const quizQuestion: QuizQuestion = { ...insertQuizQuestion, id };
-    this.quizQuestions.set(id, quizQuestion);
-    return quizQuestion;
+    try {
+      console.log(`Creating quiz question: ${JSON.stringify(insertQuizQuestion)}`);
+      
+      // Ensure the question exists
+      const question = await this.getQuestion(insertQuizQuestion.questionId);
+      if (!question) {
+        throw new Error(`Question with ID ${insertQuizQuestion.questionId} not found`);
+      }
+      
+      // Ensure the quiz exists
+      const quiz = await this.getQuiz(insertQuizQuestion.quizId);
+      if (!quiz) {
+        throw new Error(`Quiz with ID ${insertQuizQuestion.quizId} not found`);
+      }
+      
+      const id = this.quizQuestionId++;
+      const quizQuestion: QuizQuestion = { 
+        ...insertQuizQuestion, 
+        id,
+        order: insertQuizQuestion.order || 1 // Provide default order if not specified
+      };
+      
+      this.quizQuestions.set(id, quizQuestion);
+      console.log(`Created quiz question: ${JSON.stringify(quizQuestion)}`);
+      return quizQuestion;
+    } catch (error) {
+      console.error('Error creating quiz question:', error);
+      throw error;
+    }
   }
   
   // StudentResponse methods
