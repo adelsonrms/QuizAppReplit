@@ -374,8 +374,7 @@ export class MemStorage implements IStorage {
     const id = this.studentId++;
     const student: Student = { 
       ...insertStudent, 
-      id,
-      turma: 'Default' // Set a default value for turma since it's not in the insert schema anymore
+      id
     };
     this.students.set(id, student);
     return student;

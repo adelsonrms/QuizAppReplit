@@ -170,7 +170,8 @@ const StudentPage: React.FC = () => {
     }
     
     createStudentMutation.mutate({
-      name: studentName
+      name: studentName,
+      turma: 'Default'
     });
   };
   

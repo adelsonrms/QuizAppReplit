@@ -26,7 +26,12 @@ export const students = pgTable("students", {
 
 export const insertStudentSchema = createInsertSchema(students).pick({
   name: true,
-});
+  turma: true,
+}).transform((data) => ({
+  ...data,
+  // Provide default value for turma if not specified
+  turma: data.turma || 'Default',
+}));
 
 export type Student = typeof students.$inferSelect;
 export type InsertStudent = z.infer<typeof insertStudentSchema>;
