@@ -5,6 +5,8 @@ import {
   type QuizQuestion, type InsertQuizQuestion, type StudentResponse, type InsertStudentResponse,
   type StudentQuiz, type InsertStudentQuiz
 } from "@shared/schema";
+import Database from 'better-sqlite3';
+import path from 'path';
 
 export interface IStorage {
   // User methods
@@ -69,6 +71,7 @@ export class MemStorage implements IStorage {
   private quizQuestions: Map<number, QuizQuestion>;
   private studentResponses: Map<number, StudentResponse>;
   private studentQuizzes: Map<number, StudentQuiz>;
+  private db: Database.Database | null = null;
   
   // Counters for IDs
   private userId = 1;
@@ -92,8 +95,81 @@ export class MemStorage implements IStorage {
     this.studentResponses = new Map();
     this.studentQuizzes = new Map();
     
-    // Initialize with some sample data
+    // Try to connect to SQLite database
+    try {
+      const dbPath = path.resolve('./attached_assets/QuizAppDb.sqlite');
+      console.log(`Connecting to SQLite database at: ${dbPath}`);
+      this.db = new Database(dbPath);
+      console.log('Successfully connected to SQLite database');
+      
+      // Load questions and alternatives from SQLite
+      this.loadQuestionsFromSQLite();
+      this.loadAlternativesFromSQLite();
+    } catch (error) {
+      console.error('Error connecting to SQLite database:', error);
+      this.db = null;
+    }
+    
+    // Initialize remaining data
     this.initSampleData();
+  }
+  
+  private loadQuestionsFromSQLite() {
+    if (!this.db) return;
+    
+    try {
+      const stmt = this.db.prepare('SELECT * FROM Questoes');
+      const rows = stmt.all();
+      
+      console.log(`Loaded ${rows.length} questions from SQLite database`);
+      
+      rows.forEach((row: any) => {
+        const question: Question = {
+          id: row.Id,
+          code: row.Codigo,
+          category: row.Categoria,
+          enunciado: row.Enunciado,
+          imagePath: row.ImagemPath
+        };
+        
+        this.questions.set(question.id, question);
+        // Update the questionId counter to avoid conflicts
+        if (question.id >= this.questionId) {
+          this.questionId = question.id + 1;
+        }
+      });
+    } catch (error) {
+      console.error('Error loading questions from SQLite:', error);
+    }
+  }
+  
+  private loadAlternativesFromSQLite() {
+    if (!this.db) return;
+    
+    try {
+      const stmt = this.db.prepare('SELECT * FROM Alternativas');
+      const rows = stmt.all();
+      
+      console.log(`Loaded ${rows.length} alternatives from SQLite database`);
+      
+      rows.forEach((row: any) => {
+        const alternative: Alternative = {
+          id: row.Id,
+          questionId: row.QuestaoId,
+          letter: row.Letra,
+          texto: row.Texto,
+          correct: row.Correta === 1
+        };
+        
+        this.alternatives.set(alternative.id, alternative);
+        // Update the alternativeId counter to avoid conflicts
+        if (alternative.id >= this.alternativeId) {
+          this.alternativeId = alternative.id + 1;
+        }
+      });
+    } catch (error) {
+      console.error('Error loading alternatives from SQLite:', error);
+    }
   }
   
   private initSampleData() {

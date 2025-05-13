@@ -36,15 +36,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Generate quiz questions
       const allQuestions = await storage.getAllQuestions();
-      if (allQuestions.length < quizData.questionCount) {
-        return res.status(400).json({ 
-          message: "Not enough questions available for the requested count" 
+      console.log(`Total questions available: ${allQuestions.length}, Requested: ${quizData.questionCount}`);
+      
+      if (allQuestions.length === 0) {
+        return res.status(500).json({ 
+          message: "No questions available in the database" 
         });
       }
       
-      // Randomly select questions
+      if (allQuestions.length < quizData.questionCount) {
+        console.log(`Warning: Not enough questions. Using all ${allQuestions.length} available questions.`);
+        // Just use all available questions if we don't have enough
+      }
+      
+      // Randomly select questions, use as many as available up to requested count
+      const questionCount = Math.min(allQuestions.length, quizData.questionCount);
       const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
-      const selectedQuestions = shuffled.slice(0, quizData.questionCount);
+      const selectedQuestions = shuffled.slice(0, questionCount);
+      
+      console.log(`Selected ${selectedQuestions.length} questions for quiz ${quiz.id}`);
       
       // Create quiz question relationships
       for (let i = 0; i < selectedQuestions.length; i++) {
@@ -57,10 +67,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       return res.status(201).json(quiz);
     } catch (error) {
+      console.error("Error creating quiz:", error);
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid quiz data", errors: error.errors });
       }
-      return res.status(500).json({ message: "Failed to create quiz" });
+      return res.status(500).json({ message: "Failed to create quiz", error: String(error) });
     }
   });
   
