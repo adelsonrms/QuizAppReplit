@@ -145,7 +145,7 @@ const InstructorPage: React.FC = () => {
             <div>
               <h3 className="font-poppins font-semibold text-lg mb-4">{quizStatistics.title}</h3>
               
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                 <div className="bg-secondary p-4 rounded-md">
                   <span className="block text-2xl font-semibold text-primary">{quizStatistics.totalStudents}</span>
                   <span className="text-sm text-gray-700">Students</span>
@@ -153,10 +153,6 @@ const InstructorPage: React.FC = () => {
                 <div className="bg-secondary p-4 rounded-md">
                   <span className="block text-2xl font-semibold text-primary">{quizStatistics.averageScore}%</span>
                   <span className="text-sm text-gray-700">Average Score</span>
-                </div>
-                <div className="bg-secondary p-4 rounded-md">
-                  <span className="block text-2xl font-semibold text-primary">{quizStatistics.turma}</span>
-                  <span className="text-sm text-gray-700">Class</span>
                 </div>
               </div>
               

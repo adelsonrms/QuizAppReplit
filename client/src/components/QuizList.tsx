@@ -141,13 +141,13 @@ const QuizList: React.FC<QuizListProps> = ({
               
               <div className="flex flex-wrap gap-2 mb-3">
                 <span className="bg-secondary py-1 px-2 rounded text-xs text-text-dark">
-                  {quiz.completedCount || 0} alunos completaram
+                  {quiz.completedCount || 0} students completed
                 </span>
                 <span className="bg-secondary py-1 px-2 rounded text-xs text-text-dark">
-                  Média: {quiz.averageScore || 0}%
+                  Average: {quiz.averageScore || 0}%
                 </span>
                 <span className="bg-secondary py-1 px-2 rounded text-xs text-text-dark">
-                  Criado: {formatDistanceToNow(new Date(quiz.createdAt), { addSuffix: true, locale: ptBR })}
+                  Created: {formatDistanceToNow(new Date(quiz.createdAt), { addSuffix: true })}
                 </span>
               </div>
               
@@ -157,13 +157,13 @@ const QuizList: React.FC<QuizListProps> = ({
                     className="text-primary hover:text-primary-light transition-colors"
                     onClick={() => onViewAnswerKey(quiz.id)}
                   >
-                    <i className="ri-file-list-line mr-1"></i> Ver Gabarito
+                    <i className="ri-file-list-line mr-1"></i> View Answer Key
                   </button>
                   <button 
                     className="text-primary hover:text-primary-light transition-colors"
                     onClick={() => onViewStatistics(quiz.id)}
                   >
-                    <i className="ri-bar-chart-line mr-1"></i> Estatísticas
+                    <i className="ri-bar-chart-line mr-1"></i> Statistics
                   </button>
                 </div>
                 

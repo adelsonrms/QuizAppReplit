@@ -329,20 +329,20 @@ const StudentPage: React.FC = () => {
                   <h2 className="font-poppins font-semibold text-xl text-primary mb-2">{quiz.title}</h2>
                   <div className="flex flex-wrap gap-4">
                     <span className="flex items-center text-sm text-text-dark">
-                      <i className="ri-questionnaire-line mr-1"></i> {quiz.questions?.length} questões
+                      <i className="ri-questionnaire-line mr-1"></i> {quiz.questions?.length} questions
                     </span>
                     <span className="flex items-center text-sm text-text-dark">
-                      <i className="ri-time-line mr-1"></i> Sem limite de tempo
+                      <i className="ri-time-line mr-1"></i> No time limit
                     </span>
                     <span className="flex items-center text-sm text-text-dark">
-                      <i className="ri-group-line mr-1"></i> {quiz.turma}
+                      <i className="ri-group-line mr-1"></i> Class: {quiz.turma}
                     </span>
                   </div>
                 </div>
                 
                 <div className="mb-6">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium text-text-dark">Progresso</span>
+                    <span className="text-sm font-medium text-text-dark">Progress</span>
                     <span className="text-sm font-medium text-primary">
                       {currentQuestionIndex + 1}/{quiz.questions?.length}
                     </span>
