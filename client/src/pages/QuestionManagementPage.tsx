@@ -81,14 +81,50 @@ const QuestionManagementPage: React.FC = () => {
   const queryClient = useQueryClient();
 
   // Fetch all questions
-  const { data: questions, isLoading: isLoadingQuestions } = useQuery({
+  const { data: questions, isLoading: isLoadingQuestions, refetch: refetchQuestions } = useQuery({
     queryKey: ['/api/questions'],
+    queryFn: async () => {
+      console.log('Fetching questions...');
+      try {
+        const response = await fetch('/api/questions');
+        console.log('Questions API response status:', response.status);
+        
+        if (!response.ok) {
+          throw new Error(`Failed to fetch questions: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log(`Fetched ${data.length} questions from API`);
+        return data;
+      } catch (error) {
+        console.error('Error fetching questions:', error);
+        throw error;
+      }
+    },
   });
 
   // Fetch alternatives for a selected question
   const { data: alternatives, isLoading: isLoadingAlternatives } = useQuery({
     queryKey: [selectedQuestionId ? `/api/questions/${selectedQuestionId}/alternatives` : null],
     enabled: !!selectedQuestionId,
+    queryFn: async ({ queryKey }) => {
+      if (!queryKey[0]) return [];
+      
+      console.log(`Fetching alternatives for question ${selectedQuestionId}...`);
+      try {
+        const response = await fetch(queryKey[0] as string);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch alternatives: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log(`Fetched ${data.length} alternatives`);
+        return data;
+      } catch (error) {
+        console.error('Error fetching alternatives:', error);
+        throw error;
+      }
+    }
   });
 
   // Question form

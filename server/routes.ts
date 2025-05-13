@@ -28,6 +28,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Get all questions
+  app.get("/api/questions", async (req, res) => {
+    try {
+      const questions = await storage.getAllQuestions();
+      console.log(`Returning ${questions.length} questions`);
+      return res.json(questions);
+    } catch (error) {
+      console.error("Error fetching questions:", error);
+      return res.status(500).json({ message: "Failed to fetch questions", error: String(error) });
+    }
+  });
+  
+  // Get alternatives for a question
+  app.get("/api/questions/:questionId/alternatives", async (req, res) => {
+    try {
+      const questionId = parseInt(req.params.questionId);
+      if (isNaN(questionId)) {
+        return res.status(400).json({ message: "Invalid question ID" });
+      }
+      
+      const alternatives = await storage.getAlternativesByQuestion(questionId);
+      console.log(`Returning ${alternatives.length} alternatives for question ${questionId}`);
+      return res.json(alternatives);
+    } catch (error) {
+      console.error(`Error fetching alternatives for question ${req.params.questionId}:`, error);
+      return res.status(500).json({ message: "Failed to fetch alternatives", error: String(error) });
+    }
+  });
+  
   // Create a new quiz
   app.post("/api/quizzes", async (req, res) => {
     try {

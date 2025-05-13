@@ -402,7 +402,16 @@ export class MemStorage implements IStorage {
   }
   
   async getAllQuestions(): Promise<Question[]> {
-    return Array.from(this.questions.values());
+    console.log(`Getting all questions. Total questions in memory: ${this.questions.size}`);
+    const questions = Array.from(this.questions.values());
+    
+    // Log first 5 questions to debug
+    if (questions.length > 0) {
+      console.log('Sample questions:');
+      questions.slice(0, 5).forEach(q => console.log(`ID: ${q.id}, Category: ${q.category}, Question: ${q.enunciado.substring(0, 50)}...`));
+    }
+    
+    return questions;
   }
   
   async getQuestionsByCategory(category: string): Promise<Question[]> {

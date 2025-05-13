@@ -47,7 +47,6 @@ const StudentPage: React.FC = () => {
   const [showAnswers, setShowAnswers] = useState(false);
   const [studentInfoDialogOpen, setStudentInfoDialogOpen] = useState(false);
   const [studentName, setStudentName] = useState('');
-  const [studentTurma, setStudentTurma] = useState('');
   const [finishDialogOpen, setFinishDialogOpen] = useState(false);
   
   // Queries and mutations
