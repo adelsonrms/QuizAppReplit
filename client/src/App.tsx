@@ -7,6 +7,7 @@ import NotFound from "@/pages/not-found";
 import HomePage from "@/pages/HomePage";
 import InstructorPage from "@/pages/InstructorPage";
 import StudentPage from "@/pages/StudentPage";
+import QuestionManagementPage from "@/pages/QuestionManagementPage";
 
 // Import Remix Icons from CDN for icons
 const remixIconsCss = document.createElement("link");
@@ -15,7 +16,7 @@ remixIconsCss.rel = "stylesheet";
 document.head.appendChild(remixIconsCss);
 
 // Set document title
-document.title = "AMS-QUIZ - Simulado Online sobre as Ilhas Cayman";
+document.title = "AMS-QUIZ - Online Quiz System for Cayman Islands";
 
 // Import Google Fonts
 const googleFonts = document.createElement("link");
@@ -28,6 +29,7 @@ function Router() {
     <Switch>
       <Route path="/" component={HomePage} />
       <Route path="/instructor" component={InstructorPage} />
+      <Route path="/questions" component={QuestionManagementPage} />
       <Route path="/student/:quizId" component={StudentPage} />
       <Route path="/student" component={() => <StudentPage />} />
       <Route component={NotFound} />

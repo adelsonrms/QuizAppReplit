@@ -18,21 +18,21 @@ const Header: React.FC = () => {
             <li>
               <Link href="/">
                 <a className="text-secondary hover:text-accent-light transition-colors font-poppins font-medium">
-                  Início
+                  Home
                 </a>
               </Link>
             </li>
             <li className="hidden md:block">
               <Link href="/about">
                 <a className="text-secondary hover:text-accent-light transition-colors font-poppins font-medium">
-                  Sobre
+                  About
                 </a>
               </Link>
             </li>
             <li className="hidden md:block">
               <Link href="/contact">
                 <a className="text-secondary hover:text-accent-light transition-colors font-poppins font-medium">
-                  Contato
+                  Contact
                 </a>
               </Link>
             </li>

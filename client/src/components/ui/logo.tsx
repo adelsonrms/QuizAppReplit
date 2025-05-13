@@ -1,12 +1,11 @@
 import React from 'react';
+import logoImage from '@assets/logo.png';
 
 const Logo: React.FC = () => {
   return (
-    <h1 className="text-secondary font-poppins font-bold text-2xl md:text-3xl">
-      <span className="text-secondary">AMS</span>
-      <span className="text-accent">-</span>
-      <span className="text-secondary">QUIZ</span>
-    </h1>
+    <div className="flex items-center">
+      <img src={logoImage} alt="AMS Cayman Logo" className="h-10 mr-2" />
+    </div>
   );
 };
 

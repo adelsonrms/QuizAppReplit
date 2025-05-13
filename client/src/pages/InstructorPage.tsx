@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { Link } from 'wouter';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import QuizForm from '@/components/QuizForm';
@@ -71,7 +72,7 @@ const InstructorPage: React.FC = () => {
         <div className="bg-white shadow-sm">
           <div className="container mx-auto px-4">
             <div className="flex border-b border-neutral">
-              <button className="tab-btn active">Instrutor</button>
+              <button className="tab-btn active">Instructor</button>
             </div>
           </div>
         </div>
@@ -82,24 +83,24 @@ const InstructorPage: React.FC = () => {
             {/* Left Column: Dashboard Controls */}
             <div className="w-full md:w-1/3">
               <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-                <h2 className="font-poppins font-semibold text-xl mb-4 text-primary">Painel do Instrutor</h2>
+                <h2 className="font-poppins font-semibold text-xl mb-4 text-primary">Instructor Dashboard</h2>
                 
                 <QuizForm instructorId={INSTRUCTOR_ID} />
+                
+                <div className="my-4">
+                  <Link href="/questions">
+                    <a className="w-full flex items-center justify-center px-4 py-2 bg-accent text-white rounded hover:bg-accent/90 transition-colors">
+                      <i className="ri-question-line mr-2"></i>
+                      Manage Questions
+                    </a>
+                  </Link>
+                </div>
                 
                 <QuizStats 
                   quizCount={quizCount}
                   studentCount={studentCount}
                   averageScore={averageScore}
                   turmaCount={turmaCount}
-                />
-              </div>
-              
-              {/* Featured Image */}
-              <div className="hidden md:block rounded-lg overflow-hidden shadow-md">
-                <img 
-                  src="https://pixabay.com/get/ga750f8229d42056721520ad14ef7a1e4cec14e0f72da2f742fbbc30523e5ffe257ebfb46d283f49a8dde44d740427673c5d1e44d53abfc76ae7dc1f2652f16e2_1280.jpg" 
-                  alt="Ilhas Cayman - Seven Mile Beach" 
-                  className="w-full h-auto"
                 />
               </div>
             </div>
@@ -111,7 +112,7 @@ const InstructorPage: React.FC = () => {
                   <div className="text-center py-8">
                     <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent">
                     </div>
-                    <p className="mt-2 text-text-dark">Carregando simulados...</p>
+                    <p className="mt-2 text-gray-700">Loading quizzes...</p>
                   </div>
                 ) : (
                   <QuizList 
@@ -131,14 +132,14 @@ const InstructorPage: React.FC = () => {
       <Dialog open={statsDialogOpen} onOpenChange={setStatsDialogOpen}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
-            <DialogTitle>Estatísticas do Simulado</DialogTitle>
+            <DialogTitle>Quiz Statistics</DialogTitle>
           </DialogHeader>
           
           {isLoadingStatistics ? (
             <div className="text-center py-8">
               <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent">
               </div>
-              <p className="mt-2 text-text-dark">Carregando estatísticas...</p>
+              <p className="mt-2 text-gray-700">Loading statistics...</p>
             </div>
           ) : quizStatistics ? (
             <div>
@@ -147,26 +148,26 @@ const InstructorPage: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
                 <div className="bg-secondary p-4 rounded-md">
                   <span className="block text-2xl font-semibold text-primary">{quizStatistics.totalStudents}</span>
-                  <span className="text-sm text-text-dark">Alunos</span>
+                  <span className="text-sm text-gray-700">Students</span>
                 </div>
                 <div className="bg-secondary p-4 rounded-md">
                   <span className="block text-2xl font-semibold text-primary">{quizStatistics.averageScore}%</span>
-                  <span className="text-sm text-text-dark">Média Geral</span>
+                  <span className="text-sm text-gray-700">Average Score</span>
                 </div>
                 <div className="bg-secondary p-4 rounded-md">
                   <span className="block text-2xl font-semibold text-primary">{quizStatistics.turma}</span>
-                  <span className="text-sm text-text-dark">Turma</span>
+                  <span className="text-sm text-gray-700">Class</span>
                 </div>
               </div>
               
-              <h4 className="font-medium text-lg mb-3">Desempenho por Categoria</h4>
+              <h4 className="font-medium text-lg mb-3">Performance by Category</h4>
               
               <div className="space-y-4 mb-6">
                 {quizStatistics.categoriesStats?.map((stat: any, index: number) => (
                   <div key={index}>
                     <div className="flex justify-between items-center mb-1">
-                      <span className="font-medium text-text-dark">{stat.category}</span>
-                      <span className="text-text-dark">
+                      <span className="font-medium text-gray-700">{stat.category}</span>
+                      <span className="text-gray-700">
                         {stat.correct}/{stat.total} ({stat.percentage}%)
                       </span>
                     </div>
@@ -186,12 +187,12 @@ const InstructorPage: React.FC = () => {
                   variant="outline"
                   onClick={() => setStatsDialogOpen(false)}
                 >
-                  Fechar
+                  Close
                 </Button>
               </div>
             </div>
           ) : (
-            <p className="text-center py-4 text-text-dark">Nenhuma estatística disponível</p>
+            <p className="text-center py-4 text-gray-700">No statistics available</p>
           )}
         </DialogContent>
       </Dialog>
@@ -200,14 +201,14 @@ const InstructorPage: React.FC = () => {
       <Dialog open={answerKeyDialogOpen} onOpenChange={setAnswerKeyDialogOpen}>
         <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Gabarito do Simulado</DialogTitle>
+            <DialogTitle>Quiz Answer Key</DialogTitle>
           </DialogHeader>
           
           {isLoadingSelectedQuiz ? (
             <div className="text-center py-8">
               <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent">
               </div>
-              <p className="mt-2 text-text-dark">Carregando questões...</p>
+              <p className="mt-2 text-gray-700">Loading questions...</p>
             </div>
           ) : selectedQuiz ? (
             <div>
@@ -217,8 +218,8 @@ const InstructorPage: React.FC = () => {
                 {selectedQuiz.questions?.map((question: any, index: number) => (
                   <div key={question.id} className="p-4 border border-neutral rounded-lg">
                     <div className="flex justify-between items-center mb-3">
-                      <h4 className="font-medium text-primary">Questão {index + 1}</h4>
-                      <span className="text-sm text-text-dark bg-secondary px-3 py-1 rounded-full">
+                      <h4 className="font-medium text-primary">Question {index + 1}</h4>
+                      <span className="text-sm text-gray-700 bg-secondary px-3 py-1 rounded-full">
                         {question.category}
                       </span>
                     </div>
@@ -227,13 +228,13 @@ const InstructorPage: React.FC = () => {
                       <div className="mb-2 rounded-lg overflow-hidden">
                         <img 
                           src={question.imagePath} 
-                          alt={`Imagem da questão ${index + 1}`} 
+                          alt={`Question ${index + 1} image`} 
                           className="w-full h-auto max-h-48 object-cover"
                         />
                       </div>
                     )}
                     
-                    <p className="mb-3 text-text-dark">{question.enunciado}</p>
+                    <p className="mb-3 text-gray-700">{question.enunciado}</p>
                     
                     <div className="space-y-2">
                       {question.alternatives?.map((alt: any) => (
@@ -246,7 +247,7 @@ const InstructorPage: React.FC = () => {
                           <span className="font-medium">{alt.letter}.</span> {alt.texto}
                           {alt.correct && (
                             <span className="ml-2 text-success">
-                              <i className="ri-check-line"></i> Correta
+                              <i className="ri-check-line"></i> Correct
                             </span>
                           )}
                         </div>
@@ -262,12 +263,12 @@ const InstructorPage: React.FC = () => {
                   variant="outline"
                   onClick={() => setAnswerKeyDialogOpen(false)}
                 >
-                  Fechar
+                  Close
                 </Button>
               </div>
             </div>
           ) : (
-            <p className="text-center py-4 text-text-dark">Nenhuma questão disponível</p>
+            <p className="text-center py-4 text-gray-700">No questions available</p>
           )}
         </DialogContent>
       </Dialog>
