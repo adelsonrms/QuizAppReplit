@@ -5,14 +5,14 @@ import { Label } from '@/components/ui/label';
 interface Alternative {
   id: number;
   letter: string;
-  texto: string;
+  texto: string; // This field is called 'option_text' in the database schema but 'texto' in API responses
   correct?: boolean;
 }
 
 interface Question {
   id: number;
   category: string;
-  enunciado: string;
+  enunciado: string; // This field is called 'question_text' in the database schema but 'enunciado' in API responses
   imagePath: string | null;
   alternatives: Alternative[];
 }
