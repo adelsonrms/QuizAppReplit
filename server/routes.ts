@@ -103,6 +103,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
+      // Update question count to reflect the actual number of questions
+      const actualQuestionsAdded = selectedQuestions.length;
+      if (actualQuestionsAdded !== quizData.questionCount) {
+        await storage.updateQuizQuestionCount(quiz.id, actualQuestionsAdded);
+      }
+      
       return res.status(201).json(quiz);
     } catch (error) {
       console.error("Error creating quiz:", error);

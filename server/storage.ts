@@ -421,6 +421,16 @@ export class MemStorage implements IStorage {
     return updatedQuiz;
   }
   
+  async updateQuizQuestionCount(id: number, questionCount: number): Promise<Quiz | undefined> {
+    const quiz = this.quizzes.get(id);
+    if (!quiz) return undefined;
+    
+    const updatedQuiz: Quiz = { ...quiz, questionCount };
+    this.quizzes.set(id, updatedQuiz);
+    console.log(`Updated quiz ${id} to have ${questionCount} questions`);
+    return updatedQuiz;
+  }
+  
   // Question methods
   async getQuestion(id: number): Promise<Question | undefined> {
     return this.questions.get(id);
