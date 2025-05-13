@@ -334,6 +334,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Create a new question
+  app.post("/api/questions", async (req, res) => {
+    try {
+      const questionData = insertQuestionSchema.parse(req.body);
+      const question = await storage.createQuestion(questionData);
+      return res.status(201).json(question);
+    } catch (error) {
+      console.error("Error creating question:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid question data", errors: error.errors });
+      }
+      return res.status(500).json({ message: "Failed to create question" });
+    }
+  });
+  
+  // Create a new alternative for a question
+  app.post("/api/alternatives", async (req, res) => {
+    try {
+      const alternativeData = insertAlternativeSchema.parse(req.body);
+      
+      // Verify the question exists
+      const question = await storage.getQuestion(alternativeData.questionId);
+      if (!question) {
+        return res.status(404).json({ message: "Question not found" });
+      }
+      
+      const alternative = await storage.createAlternative(alternativeData);
+      return res.status(201).json(alternative);
+    } catch (error) {
+      console.error("Error creating alternative:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid alternative data", errors: error.errors });
+      }
+      return res.status(500).json({ message: "Failed to create alternative" });
+    }
+  });
+  
   // ---- CSV IMPORT ROUTES ----
   
   // Setup multer storage

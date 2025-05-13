@@ -598,9 +598,12 @@ export class MemStorage implements IStorage {
       })
     );
     
+    // Filter out null values and sort by order, adding type check
+    const validQuestions = questionsData.filter((q): q is { order: number } => q !== null);
+    
     return {
       ...quiz,
-      questions: questionsData.filter(Boolean).sort((a, b) => a.order - b.order),
+      questions: validQuestions.sort((a, b) => a.order - b.order),
     };
   }
   
