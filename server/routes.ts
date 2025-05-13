@@ -324,5 +324,128 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ---- CSV IMPORT ROUTES ----
+  
+  // Setup multer storage
+  const upload = multer({ dest: 'uploads/' });
+
+  // Import questions from CSV
+  app.post('/api/import/questions', upload.single('file'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+      }
+
+      const results: any[] = [];
+      const filePath = req.file.path;
+
+      fs.createReadStream(filePath)
+        .pipe(csvParser())
+        .on('data', (data) => results.push(data))
+        .on('end', async () => {
+          try {
+            console.log(`Parsed ${results.length} questions from CSV`);
+            
+            // Process each question
+            const imported = [];
+            for (const row of results) {
+              try {
+                // Validate and transform data
+                const questionData = {
+                  code: row.code || null,
+                  category: row.category || 'General',
+                  enunciado: row.enunciado,
+                  imagePath: row.imagePath || null
+                };
+                
+                // Create the question
+                const question = await storage.createQuestion(questionData);
+                imported.push(question);
+              } catch (err) {
+                console.error('Error importing question:', row, err);
+                // Continue with next row
+              }
+            }
+            
+            // Clean up temporary file
+            fs.unlinkSync(filePath);
+            
+            return res.status(200).json({ 
+              message: `Successfully imported ${imported.length} of ${results.length} questions`,
+              imported 
+            });
+          } catch (error) {
+            // Clean up temporary file
+            fs.unlinkSync(filePath);
+            return res.status(500).json({ message: 'Error processing questions', error: String(error) });
+          }
+        });
+    } catch (error) {
+      return res.status(500).json({ message: 'Failed to import questions', error: String(error) });
+    }
+  });
+
+  // Import alternatives from CSV
+  app.post('/api/import/alternatives', upload.single('file'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+      }
+
+      const results: any[] = [];
+      const filePath = req.file.path;
+
+      fs.createReadStream(filePath)
+        .pipe(csvParser())
+        .on('data', (data) => results.push(data))
+        .on('end', async () => {
+          try {
+            console.log(`Parsed ${results.length} alternatives from CSV`);
+            
+            // Process each alternative
+            const imported = [];
+            for (const row of results) {
+              try {
+                // Validate and transform data
+                const alternativeData = {
+                  questionId: parseInt(row.questionId),
+                  letter: row.letter,
+                  texto: row.texto,
+                  correct: row.correct === '1' || row.correct === 'true' || row.correct === true
+                };
+                
+                // Validate questionId
+                if (isNaN(alternativeData.questionId)) {
+                  console.error('Invalid questionId:', row.questionId);
+                  continue;
+                }
+                
+                // Create the alternative
+                const alternative = await storage.createAlternative(alternativeData);
+                imported.push(alternative);
+              } catch (err) {
+                console.error('Error importing alternative:', row, err);
+                // Continue with next row
+              }
+            }
+            
+            // Clean up temporary file
+            fs.unlinkSync(filePath);
+            
+            return res.status(200).json({ 
+              message: `Successfully imported ${imported.length} of ${results.length} alternatives`,
+              imported 
+            });
+          } catch (error) {
+            // Clean up temporary file
+            fs.unlinkSync(filePath);
+            return res.status(500).json({ message: 'Error processing alternatives', error: String(error) });
+          }
+        });
+    } catch (error) {
+      return res.status(500).json({ message: 'Failed to import alternatives', error: String(error) });
+    }
+  });
+
   return httpServer;
 }

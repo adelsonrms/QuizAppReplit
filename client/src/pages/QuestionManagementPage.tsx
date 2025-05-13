@@ -4,6 +4,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import CsvImportDialog from '@/components/CsvImportDialog';
 import { 
   Dialog, 
   DialogContent, 
