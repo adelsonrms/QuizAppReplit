@@ -122,22 +122,29 @@ export class MemStorage implements IStorage {
       const rows = stmt.all();
       
       console.log(`Loaded ${rows.length} questions from SQLite database`);
+      console.log('First question from SQLite:', rows.length > 0 ? JSON.stringify(rows[0]) : 'No questions found');
       
       rows.forEach((row: any) => {
         const question: Question = {
           id: row.Id,
-          code: row.Codigo,
+          code: row.Codigo || null,
           category: row.Categoria,
           enunciado: row.Enunciado,
           imagePath: row.ImagemPath
         };
         
+        console.log(`Processing question ID: ${question.id}, Category: ${question.category}`);
         this.questions.set(question.id, question);
+        
         // Update the questionId counter to avoid conflicts
         if (question.id >= this.questionId) {
           this.questionId = question.id + 1;
         }
       });
+      
+      // Log all questions loaded to verify
+      console.log(`Total questions in memory after loading: ${this.questions.size}`);
+      console.log('Question IDs in memory:', Array.from(this.questions.keys()).join(', '));
     } catch (error) {
       console.error('Error loading questions from SQLite:', error);
     }
@@ -151,6 +158,7 @@ export class MemStorage implements IStorage {
       const rows = stmt.all();
       
       console.log(`Loaded ${rows.length} alternatives from SQLite database`);
+      console.log('First alternative from SQLite:', rows.length > 0 ? JSON.stringify(rows[0]) : 'No alternatives found');
       
       rows.forEach((row: any) => {
         const alternative: Alternative = {
@@ -161,12 +169,25 @@ export class MemStorage implements IStorage {
           correct: row.Correta === 1
         };
         
+        console.log(`Processing alternative ID: ${alternative.id}, for Question ID: ${alternative.questionId}, Letter: ${alternative.letter}`);
         this.alternatives.set(alternative.id, alternative);
+        
         // Update the alternativeId counter to avoid conflicts
         if (alternative.id >= this.alternativeId) {
           this.alternativeId = alternative.id + 1;
         }
       });
+      
+      // Log all alternatives loaded to verify
+      console.log(`Total alternatives in memory after loading: ${this.alternatives.size}`);
+      const questionAlternatives = new Map<number, number[]>();
+      this.alternatives.forEach(alt => {
+        if (!questionAlternatives.has(alt.questionId)) {
+          questionAlternatives.set(alt.questionId, []);
+        }
+        questionAlternatives.get(alt.questionId)?.push(alt.id);
+      });
+      console.log('Alternatives by question:', JSON.stringify(Array.from(questionAlternatives.entries())));
     } catch (error) {
       console.error('Error loading alternatives from SQLite:', error);
     }
@@ -429,9 +450,15 @@ export class MemStorage implements IStorage {
   
   // Alternative methods
   async getAlternativesByQuestion(questionId: number): Promise<Alternative[]> {
-    return Array.from(this.alternatives.values()).filter(
+    console.log(`Getting alternatives for question ID: ${questionId}`);
+    const alternatives = Array.from(this.alternatives.values()).filter(
       (alternative) => alternative.questionId === questionId,
     );
+    console.log(`Found ${alternatives.length} alternatives for question ID: ${questionId}`);
+    if (alternatives.length > 0) {
+      console.log(`Sample alternative: ${JSON.stringify(alternatives[0])}`);
+    }
+    return alternatives;
   }
   
   async createAlternative(insertAlternative: InsertAlternative): Promise<Alternative> {
