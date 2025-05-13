@@ -376,12 +376,12 @@ const StudentPage: React.FC = () => {
             )
           ) : (
             <div className="text-center py-12">
-              <p className="text-text-dark">Simulado não encontrado ou não disponível.</p>
+              <p className="text-text-dark">Quiz not found or not available.</p>
               <Button 
                 className="mt-4 bg-primary hover:bg-primary-light text-white"
                 onClick={() => navigate('/')}
               >
-                Voltar para o Início
+                Back to Home
               </Button>
             </div>
           )}
@@ -431,15 +431,15 @@ const StudentPage: React.FC = () => {
       <AlertDialog open={finishDialogOpen} onOpenChange={setFinishDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Finalizar Simulado</AlertDialogTitle>
+            <AlertDialogTitle>Complete Quiz</AlertDialogTitle>
             <AlertDialogDescription>
-              Você ainda tem {quiz?.questions?.filter((q: any) => !responses.has(q.id)).length} questões 
-              não respondidas. Tem certeza que deseja finalizar o simulado?
+              You still have {quiz?.questions?.filter((q: any) => !responses.has(q.id)).length} questions 
+              unanswered. Are you sure you want to finish the quiz?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmFinish}>Finalizar</AlertDialogAction>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmFinish}>Finish</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

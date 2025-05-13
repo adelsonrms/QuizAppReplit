@@ -85,28 +85,7 @@ const QuizForm: React.FC<QuizFormProps> = ({ instructorId }) => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <h3 className="font-poppins text-lg font-medium mb-3 text-gray-700">Create New Quiz</h3>
         
-        <FormField
-          control={form.control}
-          name="turma"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Class</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a class" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="Class A - 2023">Class A - 2023</SelectItem>
-                  <SelectItem value="Class B - 2023">Class B - 2023</SelectItem>
-                  <SelectItem value="Class C - 2023">Class C - 2023</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {/* Class field removed as requested */}
         
         <FormField
           control={form.control}
