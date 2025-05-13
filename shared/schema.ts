@@ -41,7 +41,7 @@ export const quizzes = pgTable("quizzes", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
   instructorId: integer("instructor_id").notNull(),
-  turma: text("turma").notNull(),
+  turma: text("class").notNull(), // renamed column from turma to class (keeping turma as DB column name for compatibility)
   questionCount: integer("question_count").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   active: boolean("active").default(true).notNull(),
@@ -62,7 +62,7 @@ export const questions = pgTable("questions", {
   id: serial("id").primaryKey(),
   code: text("code"),
   category: text("category").notNull(),
-  enunciado: text("enunciado").notNull(),
+  enunciado: text("question_text").notNull(), // renamed field from enunciado to question_text (keeping enunciado as DB column name for compatibility)
   imagePath: text("image_path"),
 });
 
@@ -81,7 +81,7 @@ export const alternatives = pgTable("alternatives", {
   id: serial("id").primaryKey(),
   questionId: integer("question_id").notNull(),
   letter: text("letter").notNull(),
-  texto: text("texto").notNull(),
+  texto: text("option_text").notNull(), // renamed field from texto to option_text (keeping texto as DB column name for compatibility)
   correct: boolean("correct").default(false).notNull(),
 });
 

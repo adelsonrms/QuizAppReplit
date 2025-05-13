@@ -88,8 +88,8 @@ const QuizList: React.FC<QuizListProps> = ({
     const link = `${window.location.origin}/student/${quizId}`;
     navigator.clipboard.writeText(link).then(() => {
       toast({
-        title: 'Link copiado',
-        description: 'O link do simulado foi copiado para a área de transferência.',
+        title: 'Link copied',
+        description: 'The quiz link has been copied to your clipboard.',
       });
     });
   };
@@ -102,11 +102,11 @@ const QuizList: React.FC<QuizListProps> = ({
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="font-poppins font-semibold text-xl text-primary">Simulados Gerados</h2>
+        <h2 className="font-poppins font-semibold text-xl text-primary">Generated Quizzes</h2>
         <div className="relative">
           <Input 
             type="text" 
-            placeholder="Buscar simulado..." 
+            placeholder="Search quiz..." 
             className="pl-9 pr-4 py-2"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -118,7 +118,7 @@ const QuizList: React.FC<QuizListProps> = ({
       <div className="space-y-4">
         {filteredQuizzes.length === 0 ? (
           <div className="text-center py-8 text-text-dark opacity-70">
-            Nenhum simulado encontrado.
+            No quizzes found.
           </div>
         ) : (
           filteredQuizzes.map((quiz) => (
@@ -127,7 +127,7 @@ const QuizList: React.FC<QuizListProps> = ({
                 <div>
                   <h3 className="font-poppins font-medium text-text-dark">{quiz.title}</h3>
                   <p className="text-sm text-text-dark opacity-70">
-                    {quiz.turma} • {quiz.questionCount} questões
+                    Class: {quiz.turma} • {quiz.questionCount} questions
                   </p>
                 </div>
                 <span 
