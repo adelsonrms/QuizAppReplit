@@ -52,6 +52,7 @@ export interface IStorage {
   
   // StudentQuiz methods
   getStudentQuizzes(studentId: number): Promise<StudentQuiz[]>;
+  getStudentQuizzesByQuiz(quizId: number): Promise<StudentQuiz[]>;
   getStudentQuizByIds(studentId: number, quizId: number): Promise<StudentQuiz | undefined>;
   createStudentQuiz(studentQuiz: InsertStudentQuiz): Promise<StudentQuiz>;
   updateStudentQuizCompletion(id: number, score: number): Promise<StudentQuiz | undefined>;

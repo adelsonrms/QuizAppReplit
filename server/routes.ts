@@ -493,6 +493,123 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: 'Failed to import alternatives', error: String(error) });
     }
   });
+  
+  // Get quiz statistics
+  app.get("/api/quizzes/:quizId/statistics", async (req, res) => {
+    try {
+      const quizId = parseInt(req.params.quizId);
+      if (isNaN(quizId)) {
+        return res.status(400).json({ message: "Invalid quiz ID" });
+      }
+      
+      const statistics = await storage.getQuizStatistics(quizId);
+      return res.json(statistics);
+    } catch (error) {
+      console.error("Error getting quiz statistics:", error);
+      return res.status(500).json({ message: "Failed to get quiz statistics" });
+    }
+  });
+  
+  // Get student results for a quiz
+  app.get("/api/quizzes/:quizId/student-results", async (req, res) => {
+    try {
+      const quizId = parseInt(req.params.quizId);
+      if (isNaN(quizId)) {
+        return res.status(400).json({ message: "Invalid quiz ID" });
+      }
+      
+      // Get the quiz to verify it exists
+      const quiz = await storage.getQuiz(quizId);
+      if (!quiz) {
+        return res.status(404).json({ message: "Quiz not found" });
+      }
+      
+      // Get all student quizzes for this quiz
+      const studentQuizzes = await storage.getStudentQuizzesByQuiz(quizId);
+      
+      // For each student quiz, get the student details
+      const studentResults = await Promise.all(
+        studentQuizzes.map(async (studentQuiz) => {
+          const student = await storage.getStudent(studentQuiz.studentId);
+          return {
+            id: studentQuiz.id,
+            studentId: studentQuiz.studentId,
+            studentName: student?.name || "Unknown Student",
+            submittedAt: studentQuiz.completedAt,
+            score: studentQuiz.score || 0,
+            totalQuestions: quiz.questionCount
+          };
+        })
+      );
+      
+      return res.json(studentResults);
+    } catch (error) {
+      console.error("Error getting student results:", error);
+      return res.status(500).json({ message: "Failed to get student results" });
+    }
+  });
+  
+  // Get student responses for a quiz
+  app.get("/api/student-responses/:studentId/:quizId", async (req, res) => {
+    try {
+      const studentId = parseInt(req.params.studentId);
+      const quizId = parseInt(req.params.quizId);
+      
+      if (isNaN(studentId) || isNaN(quizId)) {
+        return res.status(400).json({ message: "Invalid student or quiz ID" });
+      }
+      
+      // Get student and quiz details
+      const student = await storage.getStudent(studentId);
+      const quiz = await storage.getQuiz(quizId);
+      
+      if (!student || !quiz) {
+        return res.status(404).json({ message: "Student or quiz not found" });
+      }
+      
+      // Get the student quiz record
+      const studentQuiz = await storage.getStudentQuizByIds(studentId, quizId);
+      
+      if (!studentQuiz) {
+        return res.status(404).json({ message: "Student has not attempted this quiz" });
+      }
+      
+      // Get the student's responses for this quiz
+      const responses = await storage.getStudentResponses(studentId, quizId);
+      
+      // Get the quiz details with questions and correct answers
+      const quizWithQuestions = await storage.getQuizWithQuestionsAndAlternatives(quizId);
+      
+      // Count correct answers
+      let correctAnswers = 0;
+      const questionMap = new Map();
+      
+      quizWithQuestions.questions.forEach((question) => {
+        questionMap.set(question.id, question);
+      });
+      
+      responses.forEach((response) => {
+        const question = questionMap.get(response.questionId);
+        if (question) {
+          const correctAlternative = question.alternatives.find((alt) => alt.correct);
+          if (correctAlternative && correctAlternative.id === response.alternativeId) {
+            correctAnswers++;
+          }
+        }
+      });
+      
+      return res.json({
+        studentName: student.name,
+        quizTitle: quiz.title,
+        responses,
+        correctAnswers,
+        totalQuestions: quiz.questionCount
+      });
+    } catch (error) {
+      console.error("Error getting student responses:", error);
+      return res.status(500).json({ message: "Failed to get student responses" });
+    }
+  });
 
   return httpServer;
 }
