@@ -21,12 +21,11 @@ export type InsertInstructor = z.infer<typeof insertInstructorSchema>;
 export const students = pgTable("students", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
-  turma: text("turma").notNull(),
+  turma: text("turma").default("Default"),
 });
 
 export const insertStudentSchema = createInsertSchema(students).pick({
   name: true,
-  turma: true,
 });
 
 export type Student = typeof students.$inferSelect;
