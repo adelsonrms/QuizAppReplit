@@ -165,6 +165,12 @@ const QuizList: React.FC<QuizListProps> = ({
                   >
                     <i className="ri-bar-chart-line mr-1"></i> Statistics
                   </button>
+                  <a 
+                    href={`/quiz-summary/${quiz.id}`}
+                    className="text-primary hover:text-primary-light transition-colors"
+                  >
+                    <i className="ri-user-line mr-1"></i> View Students
+                  </a>
                 </div>
                 
                 <div className="flex space-x-2">

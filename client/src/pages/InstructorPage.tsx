@@ -45,8 +45,8 @@ const InstructorPage: React.FC = () => {
   };
   
   const handleViewAnswerKey = (quizId: number) => {
-    setSelectedQuizId(quizId);
-    setAnswerKeyDialogOpen(true);
+    // Navigate to the answer key page
+    window.location.href = `/answer-key/${quizId}`;
   };
   
   // Calculate statistics

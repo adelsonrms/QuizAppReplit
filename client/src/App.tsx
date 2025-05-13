@@ -8,6 +8,9 @@ import HomePage from "@/pages/HomePage";
 import InstructorPage from "@/pages/InstructorPage";
 import StudentPage from "@/pages/StudentPage";
 import QuestionManagementPage from "@/pages/QuestionManagementPage";
+import QuizSummaryPage from "@/pages/QuizSummaryPage";
+import AnswerKeyPage from "@/pages/AnswerKeyPage";
+import StudentAnswersPage from "@/pages/StudentAnswersPage";
 
 // Import Remix Icons from CDN for icons
 const remixIconsCss = document.createElement("link");
@@ -32,6 +35,9 @@ function Router() {
       <Route path="/questions" component={QuestionManagementPage} />
       <Route path="/student/:quizId" component={StudentPage} />
       <Route path="/student" component={() => <StudentPage />} />
+      <Route path="/quiz-summary/:id" component={QuizSummaryPage} />
+      <Route path="/answer-key/:quizId" component={AnswerKeyPage} />
+      <Route path="/student-answers/:quizId/:studentId" component={StudentAnswersPage} />
       <Route component={NotFound} />
     </Switch>
   );
