@@ -77,6 +77,7 @@ type AlternativeFormValues = z.infer<typeof alternativeSchema>;
 const QuestionManagementPage: React.FC = () => {
   const [questionDialogOpen, setQuestionDialogOpen] = useState(false);
   const [alternativeDialogOpen, setAlternativeDialogOpen] = useState(false);
+  const [csvImportDialogOpen, setCsvImportDialogOpen] = useState(false);
   const [selectedQuestionId, setSelectedQuestionId] = useState<number | null>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -258,6 +259,12 @@ const QuestionManagementPage: React.FC = () => {
                 onClick={() => setQuestionDialogOpen(true)}
               >
                 <i className="ri-add-line mr-1"></i> Add Question
+              </Button>
+              <Button 
+                className="bg-green-600 hover:bg-green-700 text-white"
+                onClick={() => setCsvImportDialogOpen(true)}
+              >
+                <i className="ri-file-upload-line mr-1"></i> Import CSV
               </Button>
               <Link href="/instructor">
                 <a className="px-4 py-2 border border-primary text-primary rounded hover:bg-primary hover:text-white transition-colors flex items-center">
@@ -597,6 +604,12 @@ const QuestionManagementPage: React.FC = () => {
           </Form>
         </DialogContent>
       </Dialog>
+      
+      {/* CSV Import Dialog */}
+      <CsvImportDialog
+        open={csvImportDialogOpen}
+        onOpenChange={setCsvImportDialogOpen}
+      />
       
       <Footer />
     </div>
