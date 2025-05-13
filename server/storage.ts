@@ -30,6 +30,7 @@ export interface IStorage {
   getQuizzesByTurma(turma: string): Promise<Quiz[]>;
   createQuiz(quiz: InsertQuiz): Promise<Quiz>;
   updateQuizActive(id: number, active: boolean): Promise<Quiz | undefined>;
+  updateQuizQuestionCount(id: number, questionCount: number): Promise<Quiz | undefined>;
   
   // Question methods
   getQuestion(id: number): Promise<Question | undefined>;

@@ -78,15 +78,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
+      // Determine how many questions to use
+      let actualQuestionCount = quizData.questionCount;
       if (allQuestions.length < quizData.questionCount) {
         console.log(`Warning: Not enough questions. Using all ${allQuestions.length} available questions.`);
-        // Just use all available questions if we don't have enough
+        actualQuestionCount = allQuestions.length;
+        
+        // Update the quiz with the actual number of questions we're using
+        await storage.updateQuizQuestionCount(quiz.id, actualQuestionCount);
       }
       
       // Randomly select questions, use as many as available up to requested count
-      const questionCount = Math.min(allQuestions.length, quizData.questionCount);
       const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
-      const selectedQuestions = shuffled.slice(0, questionCount);
+      const selectedQuestions = shuffled.slice(0, actualQuestionCount);
       
       console.log(`Selected ${selectedQuestions.length} questions for quiz ${quiz.id}`);
       
