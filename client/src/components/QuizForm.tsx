@@ -13,8 +13,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 // Add validation schema
 const quizFormSchema = z.object({
   title: z.string().min(5, { message: 'Title must have at least 5 characters' }),
-  turma: z.string().min(1, { message: 'Please select a class' }),
-  questionCount: z.number().min(5).max(50),
+  turma: z.string().default("Default"), // Default value, we're removing the form field
+  questionCount: z.number().min(3).max(50),
   instructorId: z.number(),
 });
 
@@ -32,7 +32,7 @@ const QuizForm: React.FC<QuizFormProps> = ({ instructorId }) => {
     resolver: zodResolver(quizFormSchema),
     defaultValues: {
       title: '',
-      turma: '',
+      turma: 'Default',
       questionCount: 10,
       instructorId,
     },

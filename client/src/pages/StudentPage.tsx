@@ -86,14 +86,14 @@ const StudentPage: React.FC = () => {
         .then(res => res.json()),
     onSuccess: () => {
       toast({
-        title: 'Simulado iniciado',
-        description: 'Boa sorte!',
+        title: 'Quiz started',
+        description: 'Good luck!',
       });
       setStudentInfoDialogOpen(false);
     },
     onError: (error) => {
       toast({
-        title: 'Erro ao iniciar simulado',
+        title: 'Error starting quiz',
         description: String(error),
         variant: 'destructive',
       });
@@ -130,8 +130,8 @@ const StudentPage: React.FC = () => {
         .then(res => res.json()),
     onSuccess: (data) => {
       toast({
-        title: 'Simulado concluído',
-        description: `Sua pontuação: ${data.score}%`,
+        title: 'Quiz completed',
+        description: `Your score: ${data.score}%`,
       });
       queryClient.invalidateQueries({ 
         queryKey: [`/api/students/${STUDENT_ID}/quizzes/${quizId}`] 
@@ -141,7 +141,7 @@ const StudentPage: React.FC = () => {
     },
     onError: (error) => {
       toast({
-        title: 'Erro ao concluir simulado',
+        title: 'Error completing quiz',
         description: String(error),
         variant: 'destructive',
       });
